@@ -1,8 +1,8 @@
 public abstract class User {
-    int id;
-    String name;
-    String email;
-    String password;
+    private int id;
+    private String name;
+    private tring email;
+    private String password;
 
     public User(int id, String name, String email, String password) {
         this.id = id;
@@ -12,7 +12,7 @@ public abstract class User {
     }
 
     public boolean login(String email, String password) {
-
+        return this.email.equals(email) && this.password.equals(password)
     }
 
     public void logout() {
