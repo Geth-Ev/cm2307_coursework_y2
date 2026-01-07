@@ -1,10 +1,11 @@
 import java.util.Scanner;
+import java.util.List;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static StudentRentalSystem system = new StudentRentalSystem();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { // Main program loop
         while (true) {
             if (!system.isLoggedIn())
             {
@@ -23,7 +24,7 @@ public class Main {
         }
     }
 
-    public static void showLoginMenu() {
+    public static void showLoginMenu() { // Displays if no user is logged in
         System.out.println("--- Login Menu ---");
         System.out.println("1. Register");
         System.out.println("2. Login");
@@ -48,7 +49,7 @@ public class Main {
 
     }
 
-    public static void showStudentMenu() {
+    public static void showStudentMenu() { // Displays if logged in user is a student
         System.out.println("--- Student Menu ---");
         System.out.println("1. Edit profile");
         System.out.println("2. Logout");
@@ -73,8 +74,37 @@ public class Main {
         }
     }
 
-    public static void showHomeownerMenu() {
+    public static void showHomeownerMenu() { // Displays if logged in user is a homeowner
         System.out.println("--- Homeowner Menu ---");
+        System.out.println("1. Edit profile");
+        System.out.println("2. View Properties");
+        System.out.println("3. Add Property");
+        System.out.println("4. Logout");
+        System.out.println("5. Exit");
+        System.out.println("Choose an option: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (choice) {
+            case 1:
+                editProfile();
+                break;
+            case 2:
+                viewProperties();
+                break;
+            case 3:
+                handleAddProperty();
+                break;
+            case 4:
+                system.logout();
+                System.out.println("Logged out successfully.");
+                break;
+            case 5:
+                System.out.println("Exiting");
+                System.exit(0);
+                break;
+        }
     }
     //add show homeownermenu method here
 
@@ -123,15 +153,41 @@ public class Main {
         }
     }
 
+    public static void handleAddProperty() {
+        System.out.println("Please enter property description: ");
+        String description = scanner.nextLine();
+        System.out.println("Please enter property address: ");
+        String address = scanner.nextLine();
+        System.out.println("Please enter property rent: ");
+        double rent = scanner.nextDouble();
+
+        int id = (int)(Math.random() * 1000); // Random ID generation
+        Homeowner owner = (Homeowner) system.getCurrentUser();
+        Property newProperty = new Property(id, rent, description, address, 0.0, owner);
+        system.addProperty(newProperty);
+    }
+
+    public static void viewProperties() {
+        Homeowner owner = (Homeowner) system.getCurrentUser();
+        List<Property> ownerProperties = system.getPropertiesByOwner(owner);
+        if (ownerProperties.isEmpty()) {
+            System.out.println("You have no properties listed.");
+            return;
+        }
+        for (Property property : ownerProperties) {
+            System.out.println("Property ID: %d, Description: %s, Address: %s, Rent: %.2f, Avg Rating: %.2f".formatted(property.getId(), property.getDescription(), property.getAddress(), property.getRent(), property.getAvgRating()));
+        }
+    }
+
     public static void editProfile() {
         User current = system.getCurrentUser();
         if (current == null) return;
-        System.out.println("--- Edit Profile ---");
+        System.out.println("--- Edit Profile ---"); // --- Display current profile details ---
         System.out.println("Current info: Name: %s, Email: %s, Password: %s".formatted(current.getName(), current.getEmail(), current.getPassword()));
         if (current.getRole() == Role.STUDENT) {
             System.out.println("University: %s, Student ID: %s".formatted(((Student) current).getUniversity(), ((Student) current).getStudentID()));
         }
-        System.out.println("Enter new name (leave blank to keep): ");
+        System.out.println("Enter new name (leave blank to keep): "); // --- Ask and edit profile details ---
         String name = scanner.nextLine();
         if (!name.isBlank()) current.setName(name);
         System.out.println("Enter new email (leave blank to keep): ");
