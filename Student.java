@@ -7,4 +7,10 @@ public class Student extends User {
         this.university = university;
         this.studentID = studentID;
     }
+
+    public String getUniversity() { return university; }
+    public String getStudentID() { return studentID; }
+
+    public void setUniversity(String university) { this.university = university; }
+    public void setStudentID(String studentID) { this.studentID = studentID; }
 }
