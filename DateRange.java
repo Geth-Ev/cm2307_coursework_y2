@@ -8,6 +8,6 @@ public class DateRange {
     }
 
     public boolean overlaps(DateRange other) {
-        if //add logic for checking if start/end lies within other
+        return !(other.start.isAfter(start) && other.end.isBefore(end))
     }
 }
