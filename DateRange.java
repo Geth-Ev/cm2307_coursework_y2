@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public class DateRange {
     private LocalDate start;
     private LocalDate end;
@@ -8,6 +10,6 @@ public class DateRange {
     }
 
     public boolean overlaps(DateRange other) {
-        return !(other.start.isAfter(start) && other.end.isBefore(end))
+        return !(end.isBefore(other.start) || start.isAfter(other.end));
     }
 }
