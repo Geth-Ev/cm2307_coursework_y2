@@ -36,10 +36,11 @@ public class Room {
         }
         bookedDates.add(bookingRange);
     }
-    
+
     public void removeBooking(LocalDate start, LocalDate end) {
         DateRange bookingRange = new DateRange(start, end);
         if (bookedDates != null) {
-            bookedDates.remove(bookingRange);
+            bookedDates.remove(bookingRange); //change
         }
     }
+}
