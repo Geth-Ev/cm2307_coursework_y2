@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 
 public class Room {
+    private int id;
     private double price;
     private RoomType type;
     private List<String> amenities = new ArrayList<>();
@@ -43,4 +44,8 @@ public class Room {
             bookedDates.remove(bookingRange); //change
         }
     }
+
+    public Property getProperty() { return property; }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 }
