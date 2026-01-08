@@ -10,7 +10,7 @@ public class Property {
     private double rent;
     private List<Room> rooms = new ArrayList<>();
 
-    public Property(int id, double rent, String description, String address, double avgRating, Homeowner owner) {
+    public Property(int id, double rent, String description, String address, double avgRating, Homeowner owner) { // Working Avg Rating logic not a functional requirement implemented in the end, but kept it as it could be useful for future features
         this.id = id;
         this.rent = rent;
         this.description = description;
