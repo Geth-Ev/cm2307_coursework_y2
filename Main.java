@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.util.List;
+import java.util.ArrayList;
+import java.time.LocalDate;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
@@ -83,7 +85,7 @@ public class Main {
         System.out.println("1. Edit profile");
         System.out.println("2. View Properties");
         System.out.println("3. Add Property");
-        System.out.println("4. Show Bookings");
+        System.out.println("4. Add Room to Property");
         System.out.println("5. Logout");
         System.out.println("6. Exit");
         System.out.println("Choose an option: ");
@@ -102,7 +104,7 @@ public class Main {
                 handleAddProperty();
                 break;
             case 4:
-                viewBookings();
+                handleAddRoom();
                 break;
             case 5:
                 system.logout();
@@ -159,7 +161,7 @@ public class Main {
             System.out.println("Invalid email or password");
         }
     }
-
+    
     public static void handleAddProperty() {
         System.out.println("Please enter property description: ");
         String description = scanner.nextLine();
@@ -172,6 +174,41 @@ public class Main {
         Homeowner owner = (Homeowner) system.getCurrentUser();
         Property newProperty = new Property(id, rent, description, address, 0.0, owner);
         system.addProperty(newProperty);
+    }
+
+    public static void handleAddRoom() {
+        Homeowner owner = (Homeowner) system.getCurrentUser();
+        List<Property> ownerProperties = system.getPropertiesByOwner(owner);
+        if (ownerProperties.isEmpty()) {
+            System.out.println("You have no properties to add rooms to");
+            return;
+        }
+        viewProperties();
+        System.out.println("Please enter Property ID to add room to: ");
+        int propertyId = scanner.nextInt();
+        scanner.nextLine();
+        Property selectedProperty = null;
+        for (Property property : ownerProperties) { // Finds property matching the entered ID
+            if (property.getId() == propertyId) {
+                selectedProperty = property;
+                break;
+            }
+        }
+        if (selectedProperty == null) {
+            System.out.println("Property not found");
+            return;
+        }
+        System.out.println("Please enter room price: ");
+        double price = scanner.nextDouble();
+        System.out.println("Please enter room type (SINGLE, SINGLE ENSUITE, STUDIO): ");
+        String roomType = scanner.next().toUpperCase();
+        System.out.println("Please enter amenities (seperated by commas): ");
+        String amenitiesInput = scanner.nextLine();
+
+        int id = (int)(Math.random() * 1000); // Random ID generation
+        Room room = new Room(id, price, RoomType.valueOf(roomType), amenitiesInput, new ArrayList<>(), selectedProperty);
+        selectedProperty.addRoom(room);
+        System.out.println("Room added with ID: " + id);
     }
 
     public static void viewProperties() {
@@ -187,7 +224,66 @@ public class Main {
     }
 
     public static void handleBooking() {
-        // Fill in booking handling logic here
+        if (system.getCurrentUser().getRole() != Role.STUDENT) { // Ensures that only students can book rooms (Not required as login menu only shows student menu for students, but added as extra safety)
+            System.out.println("Only students can book rooms");
+            return;
+        }
+
+        List<Property> properties = system.getAllProperties(); // Checks if there are any properties available, returns if not
+        if (properties.isEmpty()) {
+            System.out.println("No properties available for booking");
+            return;
+        }
+
+        System.out.println("Available Properties:"); // Iterates through and displays all available properties
+        for (Property property : properties) {
+            System.out.println("Property ID: %d, Description: %s, Address: %s, Rent: %.2f".formatted(property.getId(), property.getDescription(), property.getAddress(), property.getRent()));
+        }
+
+        System.out.println("Enter Property ID to view rooms: "); // Asks user to select property by ID
+        int propertyId = scanner.nextInt();
+        scanner.nextLine();
+        if (propertyId < 0) { // Validates input
+            System.out.println("Invalid Property ID");
+            return;
+        }
+
+        Property selectedProperty = null;
+        for (Property property : properties) { // Finds property matching the entered ID
+            if (property.getId() == propertyId) {
+                selectedProperty = property;
+                break;
+            }
+        }
+        if (selectedProperty == null) {
+            System.out.println("Property not found");
+            return;
+        }
+
+        List<Room> rooms = selectedProperty.getRooms();
+        if (rooms == null || rooms.isEmpty()) {
+            System.out.println("No rooms available for this property");
+            return;
+        }
+        System.out.println("Available Rooms:");
+        for (Room room : rooms) { // Displays all rooms in the selected property
+            System.out.println("Room ID: %d, Type: %s, Price: %.2f".formatted(room.getId(), room.getType(), room.getPrice()));
+        }
+        System.out.println("Enter Room ID to book: ");
+        int selectedRoomId = scanner.nextInt();
+        scanner.nextLine();
+        Room roomToBook = null;
+        for (Room room : rooms) {
+            if (room.getId() == selectedRoomId) {
+                roomToBook = room;
+                break;
+            }
+        }
+        if (roomToBook == null) {
+            System.out.println("Room not found");
+            return;
+        }
+        
     }
 
     public static void viewBookings() {
