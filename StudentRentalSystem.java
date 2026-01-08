@@ -5,11 +5,13 @@ public class StudentRentalSystem {
     private List<User> users;
     private User currentUser;
     private List<Property> properties;
+    private List<Booking> bookings;
 
     public StudentRentalSystem() {
         this.users = new ArrayList<>();
         this.currentUser = null;
         this.properties = new ArrayList<>();
+        this.bookings = new ArrayList<>();
     }
 
     public void registerUser(User user) { // Adds user to the system
@@ -46,6 +48,30 @@ public class StudentRentalSystem {
             }
         }
         return false;
+    }
+
+    public void addBookingReq(Booking booking) { // Adds booking to the system
+        bookings.add(booking);
+    }
+
+    public List<Booking> getRoomBookings(Room room) { // Checks if bookings match a room, returns all bookings for that room
+        List<Booking> roomBookings = new ArrayList<>();
+        for (Booking booking : bookings) {
+            if (booking.getRoom() != null && booking.getRoom().equals(room)) {
+                roomBookings.add(booking);
+            }
+        }
+        return roomBookings;
+    }
+
+    public List<Booking> getBookingsForOwner(Homeowner owner) { // Checks if bookings match a homeowner's properties, returns all bookings for that homeowner
+        List<Booking> ownerBookings = new ArrayList<>();
+        for (Booking booking : bookings) {
+            if (booking.getRoom() != null && booking.getRoom().getProperty() != null && owner.equals(booking.getRoom().getProperty().getOwner())) {
+                ownerBookings.add(booking);
+            }
+        }
+        return ownerBookings;
     }
 
     public void logout() { // Logs out the current user
