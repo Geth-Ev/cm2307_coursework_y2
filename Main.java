@@ -115,11 +115,51 @@ public class Main {
         }
     }
 
+    public static String readEmail(String input) { // Validates email inputs
+        String emailRegex = "[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        if (input != null && !input.isEmpty()) System.out.print(input);
+        while (true) {
+            String email = scanner.nextLine();
+            try {
+                if (email.matches(emailRegex)) {
+                    return email;
+                } else {
+                    System.out.println("Invalid email format. Please enter a valid email: ");
+                }
+            } catch (Exception e) {
+                System.out.println("An error occurred. Please enter a valid email: ");
+            }
+        }
+    }
+
+    public static int readNum(String input) { // Validates int inputs
+        while (true) {
+            try {
+                String number = scanner.nextLine();
+                return Integer.parseInt(number.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number: ");
+            }
+        }
+    }
+    
+    public static double readDouble(String input) { // Validates double inputs
+        while (true) {
+            if (input != null && !input.isEmpty()) System.out.print(input);
+            String number = scanner.nextLine();
+            try {
+                return Double.parseDouble(number.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid decimal number.");
+            }
+        }
+    }
+
     public static void handleRegister() {
         System.out.println("Please enter your name: ");
         String name = scanner.nextLine();
         System.out.println("Please enter your email: ");
-        String email = scanner.nextLine();
+        String email = readEmail("");
         System.out.println("Please enter your password: ");
         String password = scanner.nextLine();
 
@@ -147,7 +187,7 @@ public class Main {
 
     public static void handleLogin() { // Handles user login upon choice in menu
         System.out.println("Please enter your email: ");
-        String email = scanner.nextLine();
+        String email = readEmail("");
         System.out.println("Please enter your password: ");
         String password = scanner.nextLine();
 
@@ -294,29 +334,6 @@ public class Main {
             return;
         }
         
-    }
-
-    public static int readNum(String input) { // Validates int inputs
-        while (true) {
-            try {
-                String line = scanner.nextLine();
-                return Integer.parseInt(line.trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number: ");
-            }
-        }
-    }
-    
-    public static double readDouble(String prompt) { // Validates double inputs
-        while (true) {
-            if (prompt != null && !prompt.isEmpty()) System.out.print(prompt);
-            String line = scanner.nextLine();
-            try {
-                return Double.parseDouble(line.trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid decimal number.");
-            }
-        }
     }
     
     public static void editProfile() {
