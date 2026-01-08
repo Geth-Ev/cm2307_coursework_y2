@@ -33,7 +33,7 @@ public class StudentRentalSystem {
     public List<Property> getPropertiesByOwner(Homeowner homeowner) { // Returns properties owned by specified homeowner
         List<Property> ownerProperties = new ArrayList<>();
         for (Property property : properties) {
-            if (property.getOwner() != null && property.getOwner().equals(homeowner)) {
+            if (property.getOwner() != null && homeowner != null && property.getOwner().getId() == homeowner.getId()) {
                 ownerProperties.add(property);
             }
         }
@@ -57,7 +57,7 @@ public class StudentRentalSystem {
     public List<Booking> getRoomBookings(Room room) { // Checks if bookings match a room, returns all bookings for that room
         List<Booking> roomBookings = new ArrayList<>();
         for (Booking booking : bookings) {
-            if (booking.getRoom() != null && booking.getRoom().equals(room)) {
+            if (booking.getRoom() != null && room != null && booking.getRoom().getId() == room.getId()) {
                 roomBookings.add(booking);
             }
         }
@@ -67,8 +67,11 @@ public class StudentRentalSystem {
     public List<Booking> getBookingsForOwner(Homeowner owner) { // Checks if bookings match a homeowner's properties, returns all bookings for that homeowner
         List<Booking> ownerBookings = new ArrayList<>();
         for (Booking booking : bookings) {
-            if (booking.getRoom() != null && booking.getRoom().getProperty() != null && owner.equals(booking.getRoom().getProperty().getOwner())) {
-                ownerBookings.add(booking);
+            if (booking.getRoom() != null && booking.getRoom().getProperty() != null && owner != null) {
+                Homeowner propOwner = booking.getRoom().getProperty().getOwner();
+                if (propOwner != null && propOwner.getId() == owner.getId()) {
+                    ownerBookings.add(booking);
+                }
             }
         }
         return ownerBookings;
