@@ -1,12 +1,15 @@
-public class Booking {
-    int id;
-    Room room;
-    Student student;
-    LocalDate start;
-    LocalDate end;
-    BookingStatus status;
+import java.time.LocalDate;
 
-    public Booking(Room room, Student student, LocalDate start, LocalDate end) {
+public class Booking {
+    private int id;
+    private Room room;
+    private Student student;
+    private LocalDate start;
+    private LocalDate end;
+    private BookingStatus status;
+
+    public Booking(int id, Room room, Student student, LocalDate start, LocalDate end) {
+        this.id = id;
         this.room = room;
         this.student = student;
         this.start = start;
@@ -15,8 +18,10 @@ public class Booking {
     }
 
     public void accept() {
+        if (room != null) {
+            room.addBooking(start, end);
+        }
         status = BookingStatus.ACCEPTED;
-        room.addBooking(start, end);
     }
 
     public void reject() {
@@ -24,7 +29,19 @@ public class Booking {
     }
 
     public void cancel() {
+        if (room != null) {
+            room.removeBooking(start, end);
+        }
         status = BookingStatus.CANCELLED;
-        room.removeBooking(start, end);
     }
+
+    public int getId() { return id; }
+    public Room getRoom() { return room; }
+    public Student getStudent() { return student; }
+    public LocalDate getStart() { return start; }
+    public LocalDate getEnd() { return end; }
+    public LocalDate getStartDate() { return start; }
+    public LocalDate getEndDate() { return end; }
+    public BookingStatus getStatus() { return status; }
+    public void setStatus(BookingStatus status) { this.status = status; }
 }
