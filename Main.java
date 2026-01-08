@@ -52,8 +52,9 @@ public class Main {
     public static void showStudentMenu() { // Displays if logged in user is a student
         System.out.println("--- Student Menu ---");
         System.out.println("1. Edit profile");
-        System.out.println("2. Logout");
-        System.out.println("3. Exit");
+        System.out.println("2. Book a Room");
+        System.out.println("3. Logout");
+        System.out.println("4. Exit");
         System.out.println("Choose an option: ");
 
         int choice = scanner.nextInt();
@@ -64,10 +65,13 @@ public class Main {
                 editProfile();
                 break;
             case 2:
-                system.logout();
-                System.out.println("Logged out successfully.");
+                handleBooking();
                 break;
             case 3:
+                system.logout();
+                System.out.println("Logged out successfully");
+                break;
+            case 4:
                 System.out.println("Exiting");
                 System.exit(0);
                 break;
@@ -79,8 +83,9 @@ public class Main {
         System.out.println("1. Edit profile");
         System.out.println("2. View Properties");
         System.out.println("3. Add Property");
-        System.out.println("4. Logout");
-        System.out.println("5. Exit");
+        System.out.println("4. Show Bookings");
+        System.out.println("5. Logout");
+        System.out.println("6. Exit");
         System.out.println("Choose an option: ");
 
         int choice = scanner.nextInt();
@@ -97,16 +102,18 @@ public class Main {
                 handleAddProperty();
                 break;
             case 4:
+                viewBookings();
+                break;
+            case 5:
                 system.logout();
                 System.out.println("Logged out successfully.");
                 break;
-            case 5:
+            case 6:
                 System.out.println("Exiting");
                 System.exit(0);
                 break;
         }
     }
-    //add show homeownermenu method here
 
     public static void handleRegister() {
         System.out.println("Please enter your name: ");
@@ -136,7 +143,7 @@ public class Main {
         }
 
         system.registerUser(newUser);
-        System.out.println("Registration successful. You can now log in.");
+        System.out.println("Registration successful. You can now log in");
     }
 
     public static void handleLogin() { // Handles user login upon choice in menu
@@ -149,7 +156,7 @@ public class Main {
             System.out.println("Login successful.");
         }
         else {
-            System.out.println("Invalid email or password.");
+            System.out.println("Invalid email or password");
         }
     }
 
@@ -171,11 +178,30 @@ public class Main {
         Homeowner owner = (Homeowner) system.getCurrentUser();
         List<Property> ownerProperties = system.getPropertiesByOwner(owner);
         if (ownerProperties.isEmpty()) {
-            System.out.println("You have no properties listed.");
+            System.out.println("You have no properties listed");
             return;
         }
         for (Property property : ownerProperties) {
             System.out.println("Property ID: %d, Description: %s, Address: %s, Rent: %.2f, Avg Rating: %.2f".formatted(property.getId(), property.getDescription(), property.getAddress(), property.getRent(), property.getAvgRating()));
+        }
+    }
+
+    public static void handleBooking() {
+        // Fill in booking handling logic here
+    }
+
+    public static void viewBookings() {
+        Homeowner owner = (Homeowner) system.getCurrentUser();
+        List<Booking> ownerBookings = system.getBookingsForOwner(owner);
+        if (ownerBookings.isEmpty()) {
+            System.out.println("You have no bookings for your properties");
+            return;
+        }
+        for (Booking booking : ownerBookings) {
+            Room room = booking.getRoom();
+            Property property = room.getProperty();
+            Student student = booking.getStudent();
+            System.out.println("Booking ID: %d, Property ID: %d, Room ID: %d, Student Name: %s, From: %s, To: %s".formatted(booking.getId(), property.getId(), room.getId(), student.getName(), booking.getStartDate(), booking.getEndDate()));
         }
     }
 
@@ -205,6 +231,6 @@ public class Main {
             String studentID = scanner.nextLine();
             if (!studentID.isBlank()) s.setStudentID(studentID);
         }
-        System.out.println("Profile updated.");
+        System.out.println("Profile updated");
     }
 }
