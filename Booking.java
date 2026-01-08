@@ -6,7 +6,6 @@ public class Booking {
     private Student student;
     private LocalDate start;
     private LocalDate end;
-    private BookingStatus status;
 
     public Booking(int id, Room room, Student student, LocalDate start, LocalDate end) {
         this.id = id;
@@ -14,25 +13,6 @@ public class Booking {
         this.student = student;
         this.start = start;
         this.end = end;
-        this.status = BookingStatus.REQUESTED;
-    }
-
-    public void accept() {
-        if (room != null) {
-            room.addBooking(start, end);
-        }
-        status = BookingStatus.ACCEPTED;
-    }
-
-    public void reject() {
-        status = BookingStatus.REJECTED;
-    }
-
-    public void cancel() {
-        if (room != null) {
-            room.removeBooking(start, end);
-        }
-        status = BookingStatus.CANCELLED;
     }
 
     public int getId() { return id; }
@@ -42,6 +22,4 @@ public class Booking {
     public LocalDate getEnd() { return end; }
     public LocalDate getStartDate() { return start; }
     public LocalDate getEndDate() { return end; }
-    public BookingStatus getStatus() { return status; }
-    public void setStatus(BookingStatus status) { this.status = status; }
 }
