@@ -6,16 +6,14 @@ public class Property {
     private String description;
     private String address;
     private Homeowner owner;
-    private double avgRating;
     private double rent;
     private List<Room> rooms = new ArrayList<>();
 
-    public Property(int id, double rent, String description, String address, double avgRating, Homeowner owner) { // Working Avg Rating logic not a functional requirement implemented in the end, but kept it as it could be useful for future features
+    public Property(int id, double rent, String description, String address, Homeowner owner) {
         this.id = id;
         this.rent = rent;
         this.description = description;
         this.address = address;
-        this.avgRating = 0.0;
         this.owner = owner;
     }
 
@@ -24,7 +22,6 @@ public class Property {
     public String getAddress() { return address; }
     public double getRent() { return rent; }
     public Homeowner getOwner() { return owner; }
-    public double getAvgRating() { return avgRating; }
 
     public List<Room> getRooms() { return rooms; }
     public void addRoom(Room room) {

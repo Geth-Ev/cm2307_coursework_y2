@@ -116,7 +116,7 @@ public class Main {
     }
 
     public static String readEmail(String input) { // Validates email inputs
-        String emailRegex = "[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"; // Email regex pattern
         if (input != null && !input.isEmpty()) System.out.print(input);
         while (true) {
             String email = scanner.nextLine();
@@ -209,7 +209,7 @@ public class Main {
 
         int id = (int)(Math.random() * 1000); // Random ID generation
         Homeowner owner = (Homeowner) system.getCurrentUser();
-        Property newProperty = new Property(id, rent, description, address, 0.0, owner);
+        Property newProperty = new Property(id, rent, description, address, owner);
         system.addProperty(newProperty);
     }
 
@@ -271,7 +271,7 @@ public class Main {
         }
 
         for (Property property : sorted) {
-            System.out.println("Property ID: %d, Description: %s, Address: %s, Rent: %.2f, Avg Rating: %.2f".formatted(property.getId(), property.getDescription(), property.getAddress(), property.getRent(), property.getAvgRating()));
+            System.out.println("Property ID: %d, Description: %s, Address: %s, Rent: %.2f".formatted(property.getId(), property.getDescription(), property.getAddress(), property.getRent()));
         }
     }
 
