@@ -6,8 +6,6 @@ import java.time.LocalDate;
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static StudentRentalSystem system = new StudentRentalSystem();
-    /// TODO: I need to add input validation throughout the program to ensure robustness
-    /// & Remove any redundant code from unfinished potential functional requirements
     public static void main(String[] args) { // Main program loop
         while (true) {
             if (!system.isLoggedIn())

@@ -8,6 +8,7 @@ public class StudentRentalSystem {
     private Map<String, User> usersByEmail; // HashMap for O(1) login
     private List<Property> properties;
     private List<Booking> bookings;
+    private User currentUser;
 
     public StudentRentalSystem() {
         this.users = new ArrayList<>();
