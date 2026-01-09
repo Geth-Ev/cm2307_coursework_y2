@@ -352,7 +352,7 @@ public class Main {
         
     }
 
-    public static void handleSearchRooms() {
+    public static void handleSearchRooms() { // Handles room search functionality
         System.out.println("--- Search Rooms ---");
         System.out.println("Enter city (leave blank for any): ");
         String city = scanner.nextLine().trim();
@@ -381,7 +381,7 @@ public class Main {
             Room room = searchResults.get(i);
             System.out.println("Room ID: %d, Type: %s, Price: £%.2f, Property: %s".formatted(room.getId(), room.getType(), room.getPrice(), room.getProperty().getAddress()));
         }
-        System.out.println("Enter room number to view details (0 to go back): ");
+        System.out.println("Enter room number to view details (0 to go back): "); // Rooms are indexed from 1 for selection rathert than ID
         int choice = readNum("");
         if (choice == 0) return;
         if (choice > 0 && choice <= searchResults.size()) {
@@ -391,7 +391,7 @@ public class Main {
         }
     }
     
-    public static void viewRoomDetails(Room room) {
+    public static void viewRoomDetails(Room room) { // Displays detailed room info and booking option
         Property property = room.getProperty();
         System.out.println("--- Room Details ---");
         System.out.println("Room ID: " + room.getId());

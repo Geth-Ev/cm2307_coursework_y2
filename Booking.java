@@ -4,7 +4,7 @@ public class Booking {
     private int id;
     private Room room;
     private Student student;
-    private LocalDate start;
+    private LocalDate start; // Currently unused, potentially used for 3.4
     private LocalDate end;
 
     public Booking(int id, Room room, Student student, LocalDate start, LocalDate end) {
