@@ -6,12 +6,12 @@ public class Room {
     private int id;
     private double price;
     private RoomType type;
-    private String amenities;
+    private List<String> amenities = new ArrayList<>();
     private List<DateRange> availability = new ArrayList<>();
     private List<DateRange> bookedDates = new ArrayList<>();
     private Property property;
     
-    public Room(int id, double price, RoomType type, String amenities, List<DateRange> bookedDates, Property property) {
+    public Room(int id, double price, RoomType type, List<String> amenities, List<DateRange> bookedDates, Property property) {
         this.id = id;
         this.price = price;
         this.type = type;
@@ -50,6 +50,6 @@ public class Room {
     public int getId() { return id; }
     public double getPrice() { return price; }
     public RoomType getType() { return type; }
-    public String getAmenities() { return amenities; }
+    public List<String> getAmenities() { return amenities; }
     public List<DateRange> getBookedDates() { return bookedDates; }
 }

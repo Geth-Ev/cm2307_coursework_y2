@@ -77,6 +77,29 @@ public class StudentRentalSystem {
         return ownerBookings;
     }
 
+    public List<Room> searchRooms(String city, String area, double minPrice, double maxPrice, RoomType type) {
+        // Combined search filter by city, area, price range, and room type
+        List<Room> matchingRooms = new ArrayList<>();
+        for (Property property : properties) {
+            // Filter by location (skip filter if blank/null)
+            if (city != null && !city.isEmpty() && !property.getCity().equalsIgnoreCase(city)) {
+                continue;
+            }
+            if (area != null && !area.isEmpty() && !property.getArea().equalsIgnoreCase(area)) {
+                continue;
+            }
+            // Then filter rooms by price and type
+            for (Room room : property.getRooms()) {
+                boolean priceMatch = room.getPrice() >= minPrice && room.getPrice() <= maxPrice;
+                boolean typeMatch = (type == null) || (room.getType() == type);
+                if (priceMatch && typeMatch) {
+                    matchingRooms.add(room);
+                }
+            }
+        }
+        return matchingRooms;
+    }
+
     public void logout() { // Logs out the current user
         currentUser = null;
     }

@@ -54,9 +54,10 @@ public class Main {
     public static void showStudentMenu() { // Displays if logged in user is a student
         System.out.println("--- Student Menu ---");
         System.out.println("1. Edit profile");
-        System.out.println("2. Book a Room");
-        System.out.println("3. Logout");
-        System.out.println("4. Exit");
+        System.out.println("2. Search Rooms");
+        System.out.println("3. Book a Room");
+        System.out.println("4. Logout");
+        System.out.println("5. Exit");
         System.out.println("Choose an option: ");
 
         int choice = readNum("");
@@ -66,13 +67,16 @@ public class Main {
                 editProfile();
                 break;
             case 2:
-                handleBooking();
+                handleSearchRooms();
                 break;
             case 3:
+                handleBooking();
+                break;
+            case 4:
                 system.logout();
                 System.out.println("Logged out successfully");
                 break;
-            case 4:
+            case 5:
                 System.out.println("Exiting");
                 System.exit(0);
                 break;
@@ -202,14 +206,16 @@ public class Main {
     public static void handleAddProperty() {
         System.out.println("Please enter property description: ");
         String description = scanner.nextLine();
-        System.out.println("Please enter property address: ");
+        System.out.println("Please enter property street: ");
         String address = scanner.nextLine();
-        System.out.println("Please enter property rent: ");
-        double rent = readDouble("");
+        System.out.println("Please enter property city: ");
+        String city = scanner.nextLine();
+        System.out.println("Please enter property area: ");
+        String area = scanner.nextLine();
 
         int id = (int)(Math.random() * 1000); // Random ID generation
         Homeowner owner = (Homeowner) system.getCurrentUser();
-        Property newProperty = new Property(id, rent, description, address, owner);
+        Property newProperty = new Property(id, description, address, owner, city, area);
         system.addProperty(newProperty);
     }
 
@@ -239,7 +245,7 @@ public class Main {
         System.out.println("Please enter room type (Single, Single Ensuite, Studio): ");
         String roomType = scanner.next().toUpperCase();
         System.out.println("Please enter amenities (seperated by commas): ");
-        String amenitiesInput = scanner.nextLine();
+        List<String> amenitiesInput = handleAmenitiesInput();
 
         int id = (int)(Math.random() * 1000); // Random ID generation
         Room room = new Room(id, price, RoomType.valueOf(roomType), amenitiesInput, new ArrayList<>(), selectedProperty);
@@ -271,8 +277,18 @@ public class Main {
         }
 
         for (Property property : sorted) {
-            System.out.println("Property ID: %d, Description: %s, Address: %s, Rent: %.2f".formatted(property.getId(), property.getDescription(), property.getAddress(), property.getRent()));
+            System.out.println("Property ID: %d, Description: %s, Address: %s, City: %s, Area: %s".formatted(property.getId(), property.getDescription(), property.getAddress(), property.getCity(), property.getArea()));
         }
+    }
+    public static List<String> handleAmenitiesInput() { // Makes user input into a list of amenities
+        scanner.nextLine();
+        String amenitiesLine = scanner.nextLine();
+        String[] amenitiesArray = amenitiesLine.split(",");
+        List<String> amenitiesList = new ArrayList<>();
+        for (String amenity : amenitiesArray) {
+            amenitiesList.add(amenity.trim());
+        }
+        return amenitiesList;
     }
 
     public static void handleBooking() {
@@ -289,7 +305,7 @@ public class Main {
 
         System.out.println("Available Properties:"); // Iterates through and displays all available properties
         for (Property property : properties) {
-            System.out.println("Property ID: %d, Description: %s, Address: %s, Rent: %.2f".formatted(property.getId(), property.getDescription(), property.getAddress(), property.getRent()));
+            System.out.println("Property ID: %d, Description: %s, Address: %s, City: %s, Area: %s".formatted(property.getId(), property.getDescription(), property.getAddress(), property.getCity(), property.getArea()));
         }
 
         System.out.println("Enter Property ID to view rooms: "); // Asks user to select property by ID
@@ -318,7 +334,7 @@ public class Main {
         }
         System.out.println("Available Rooms:");
         for (Room room : rooms) { // Displays all rooms in the selected property
-            System.out.println("Room ID: %d, Type: %s, Price: %.2f".formatted(room.getId(), room.getType(), room.getPrice()));
+            System.out.println("Room ID: %d, Type: %s, Price: %.2f, Amenities: %s".formatted(room.getId(), room.getType(), room.getPrice(), room.getAmenities()));
         }
         System.out.println("Enter Room ID to book: ");
         int selectedRoomId = readNum("");
@@ -335,7 +351,71 @@ public class Main {
         }
         
     }
+
+    public static void handleSearchRooms() {
+        System.out.println("--- Search Rooms ---");
+        System.out.println("Enter city (leave blank for any): ");
+        String city = scanner.nextLine().trim();
+        System.out.println("Enter area (leave blank for any): ");
+        String area = scanner.nextLine().trim();
+        System.out.println("Enter minimum price: ");
+        double minPrice = readDouble("");
+        System.out.println("Enter maximum price: ");
+        double maxPrice = readDouble("");
+        System.out.println("Enter room type (Single, Single Ensuite, Studio): ");
+        String roomTypeInput = scanner.nextLine().toUpperCase();
+        RoomType roomType = null;
+        try {
+            roomType = RoomType.valueOf(roomTypeInput);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid room type. Using Single as default");
+            roomType = RoomType.SINGLE;
+        }
+        List<Room> searchResults = system.searchRooms(city, area, minPrice, maxPrice, roomType);
+        if (searchResults.isEmpty()) {
+            System.out.println("No rooms found");
+            return;
+        }
+        System.out.println("--- Search Results ---");
+        for (int i = 0; i < searchResults.size(); i++) {
+            Room room = searchResults.get(i);
+            System.out.println("Room ID: %d, Type: %s, Price: £%.2f, Property: %s".formatted(room.getId(), room.getType(), room.getPrice(), room.getProperty().getAddress()));
+        }
+        System.out.println("Enter room number to view details (0 to go back): ");
+        int choice = readNum("");
+        if (choice == 0) return;
+        if (choice > 0 && choice <= searchResults.size()) {
+            viewRoomDetails(searchResults.get(choice - 1));
+        } else {
+            System.out.println("Invalid selection.");
+        }
+    }
     
+    public static void viewRoomDetails(Room room) {
+        Property property = room.getProperty();
+        System.out.println("--- Room Details ---");
+        System.out.println("Room ID: " + room.getId());
+        System.out.println("Type: " + room.getType());
+        System.out.println("Price: £" + room.getPrice() + " per month");
+        System.out.println("Amenities: " + String.join(", ", room.getAmenities()));
+        System.out.println("--- Property Details ---");
+        System.out.println("Address: " + property.getAddress());
+        System.out.println("City: " + property.getCity());
+        System.out.println("Area: " + property.getArea());
+        System.out.println("Description: " + property.getDescription());
+        System.out.println("Owner: " + property.getOwner().getName());
+        System.out.println("1. Book this room");
+        System.out.println("2. Back to search results");
+        System.out.println("Choose an option: ");
+        int choice = readNum("");
+        if (choice == 1) {
+            handleBooking();
+        }
+        else {
+            return;
+        }
+    }
+
     public static void editProfile() {
         User current = system.getCurrentUser();
         if (current == null) return;

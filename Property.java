@@ -6,23 +6,25 @@ public class Property {
     private String description;
     private String address;
     private Homeowner owner;
-    private double rent;
     private List<Room> rooms = new ArrayList<>();
+    private String city;
+    private String area;
 
-    public Property(int id, double rent, String description, String address, Homeowner owner) {
+    public Property(int id, String description, String address, Homeowner owner, String city, String area) {
         this.id = id;
-        this.rent = rent;
         this.description = description;
         this.address = address;
         this.owner = owner;
+        this.city = city;
+        this.area = area;
     }
 
     public int getId() { return id; }
     public String getDescription() { return description; }
     public String getAddress() { return address; }
-    public double getRent() { return rent; }
     public Homeowner getOwner() { return owner; }
-
+    public String getCity() { return city; }
+    public String getArea() { return area; }
     public List<Room> getRooms() { return rooms; }
     public void addRoom(Room room) {
         if (room != null) {
