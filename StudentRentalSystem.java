@@ -1,14 +1,17 @@
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class StudentRentalSystem {
     private List<User> users;
-    private User currentUser;
+    private Map<String, User> usersByEmail; // HashMap for O(1) login
     private List<Property> properties;
     private List<Booking> bookings;
 
     public StudentRentalSystem() {
         this.users = new ArrayList<>();
+        this.usersByEmail = new HashMap<>();
         this.currentUser = null;
         this.properties = new ArrayList<>();
         this.bookings = new ArrayList<>();
@@ -16,6 +19,7 @@ public class StudentRentalSystem {
 
     public void registerUser(User user) { // Adds user to the system
         users.add(user);
+        usersByEmail.put(user.getEmail(), user); // Index by email for fast login
     }
 
     public void addProperty(Property property) { // Adds property to the system
@@ -40,12 +44,11 @@ public class StudentRentalSystem {
         return ownerProperties;
     }
 
-    public boolean login(String email, String password) { // Authenticates user credentials
-        for (User user : users) {
-            if (user.authenticateUser(email, password)) {
-                currentUser = user;
-                return true;
-            }
+    public boolean login(String email, String password) { // Authenticates user credentials - O(1) with HashMap
+        User user = usersByEmail.get(email);
+        if (user != null && user.authenticateUser(email, password)) {
+            currentUser = user;
+            return true;
         }
         return false;
     }
